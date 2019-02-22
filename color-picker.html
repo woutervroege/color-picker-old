@@ -1,7 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
-<link rel="import" href="../iron-selector/iron-selector.html">
 
 <dom-module id="color-picker">
   <template>
@@ -9,7 +8,7 @@
       :host {
         display: inline;
         transform-origin: 0 0;
-        transform: rotate(90deg) scaleY(-1);        
+        transform: rotate(90deg) scaleY(-1);
       }
 
       section {
@@ -21,7 +20,7 @@
         display: inline;
       }
 
-      iron-selector {
+      #grid {
         display: flex;
         flex-wrap: wrap;
         max-width: calc(var(--color-picker-column-count, 10) * var(--color-picker-item-size, 20px));
@@ -37,33 +36,30 @@
 
       .color:hover,
       .color:active,
-      .color.iron-selected {
+      .color[data-selected] {
         transform: scale(1.3, 1.3);
       }
     </style>
 
     <section
       id="container"
-      contenteditable="true"
+      tabindex="1"
       on-focus="_handleFocus"
       on-blur="_handleBlur"
     >
-      <iron-selector
-        selected="{{color}}"
-        attr-for-selected="data-color"
-        on-iron-select="_handleSelectedChanged"
-        contenteditable="false"
-      >
-        <dom-repeat items="[[colors]]" as="color">
+      <div id="grid">
+        <dom-repeat items="[[colors]]" as="option">
         <template>
           <div
             class="color"
-            data-color$="[[color]]"
-            style$="background-color:[[color]];"
+            data-color$="[[option]]"
+            data-selected$="[[_isEqual(color, option)]]"
+            style$="background-color:[[option]];"
+            on-tap="_handleColorTap"
           ></div>
         </template>
         </dom-repeat>
-      </iron-selector>
+      </div>
     </section>
 
   </template>
@@ -108,10 +104,6 @@
         };
       }
 
-      ready() {
-        super.ready();
-      }
-
       _handleFocus() {
         this.active = true;
       }
@@ -133,9 +125,18 @@
       _handleSelectedChanged() {
         if(this.autohide) {
           window.setTimeout(() => {
-            this.active = false;      
           }, 100);
         }
+      }
+
+      _handleColorTap(evt) {
+        var color = evt.target.dataset.color;
+        this.color = color;
+        this.active = false;
+      }
+
+      _isEqual(a, b) {
+        return a == b;
       }
 
     }
