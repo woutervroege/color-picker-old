@@ -6,11 +6,14 @@
 
     <title>color-picker demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../color-picker.html">
+    <script type="module">
+      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+      import '@polymer/iron-demo-helpers/demo-snippet';
+    </script>
+
+    <script type="module" src="../color-picker.js"></script>
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -33,62 +36,18 @@
       <h3>Basic color-picker demo</h3>
       <demo-snippet>
         <template>            
-          <color-picker-demo active></color-picker-demo>
+          <color-picker id="picker" active></color-picker>
+          <button id="btn">Open</button>
         </template>
       </demo-snippet>
-    </div>
-
-    <dom-module id="color-picker-demo">
-      <template>
-
-        <style>
-
-          #container {
-            position: relative;
-          }
-
-          color-picker {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-          }
-
-        </style>
-
-        <div id="container">
-          <button id="button" on-tap="toggle">Open picker</button>
-          <color-picker active="{{active}}" autohide></color-picker>
-        </div>
-
-      </template>
-
       <script>
-        window.addEventListener('WebComponentsReady', function() {
-
-          class ColorPickerDemo extends Polymer.GestureEventListeners(Polymer.Element) {            
-            static get is() { return 'color-picker-demo'; }            
-            static get properties() {
-              return {
-                active: {
-                  type: Boolean,
-                  value: false
-                }
-              }
-            }
-
-            toggle() {
-              this.active = !this.active;
-            }
-          }
-
-          window.customElements.define(ColorPickerDemo.is, ColorPickerDemo);
-
+        window.addEventListener('WebComponentsReady', () => {
+          btn.addEventListener('click', () => {
+            picker.active = true;
+          })
         })
-
       </script>
-    </dom-module>
-
+    </div>
 
   </body>
 </html>
