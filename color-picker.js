@@ -37,6 +37,7 @@ class ColorPicker extends LitElement {
   updated(props) {
     super.updated();
     if(props.has('active')) this._activeChanged(this.active);
+    if(props.has('color')) this.dispatchEvent(new CustomEvent('color-changed', {detail: {value: this.color}}));
   }
 
   _handleFocus() {
@@ -48,6 +49,7 @@ class ColorPicker extends LitElement {
   }
 
   _activeChanged(active) {
+    this.dispatchEvent(new CustomEvent('active-changed', {detail: {value: active}}));
     var element = this.shadowRoot.querySelector('#container');
     if(!element) return;
     if(active === true) {
